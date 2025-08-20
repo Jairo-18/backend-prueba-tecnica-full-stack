@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 
+# Importar routers desde la carpeta app
 from app.auth.routes import router as auth_router
 from app.users.routes import router as users_router
 from app.brand.routes import router as brand_router
