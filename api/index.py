@@ -28,10 +28,4 @@ app.include_router(brand_router, prefix="/brand", tags=["Registro de Marcas"])
 def root():
     return {"message": "API OK"}
 
-# Handler para Vercel - Configuración explícita
-def handler(request, context):
-    """Handler compatible con Vercel"""
-    return app
-
-# También exportar la app directamente
-__all__ = ["app", "handler"]
+# NO AÑADIR NADA MÁS - Vercel detecta automáticamente la variable 'app'
