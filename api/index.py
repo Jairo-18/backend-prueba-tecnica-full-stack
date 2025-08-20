@@ -1,6 +1,14 @@
+import sys
+import os
+
+# Añadir el directorio actual al path de Python para que encuentre la carpeta 'app'
+current_dir = os.path.dirname(os.path.abspath(__file__))
+if current_dir not in sys.path:
+    sys.path.insert(0, current_dir)
+
 from fastapi import FastAPI
- 
-# Importar routers desde la carpeta app
+
+# Ahora las importaciones funcionarán
 from app.auth.routes import router as auth_router
 from app.users.routes import router as users_router
 from app.brand.routes import router as brand_router
@@ -20,4 +28,5 @@ app.include_router(brand_router, prefix="/brand", tags=["Registro de Marcas"])
 def root():
     return {"message": "API OK"}
 
+# Handler para Vercel
 handler = app
