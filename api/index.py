@@ -1,12 +1,22 @@
+# api/index.py
 import sys
 import os
+from pathlib import Path
 
-# Añadir el directorio actual al path de Python para que encuentre la carpeta 'app'
-# project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-# if project_root not in sys.path:
-#     sys.path.insert(0, project_root)
+# Obtener la ruta absoluta del directorio actual
+current_dir = Path(__file__).parent.absolute()
+# Obtener la ruta del directorio padre (raíz del proyecto)
+project_root = current_dir.parent
+
+# Agregar el directorio raíz al path de Python
+sys.path.insert(0, str(project_root))
+
+print(f"Current directory: {current_dir}")
+print(f"Project root: {project_root}")
+print(f"Python path: {sys.path}")
 
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 # Ahora las importaciones funcionarán
 from app.auth.routes import router as auth_router
@@ -19,6 +29,15 @@ app = FastAPI(
     version="1.0.0",
 )
 
+# Configurar CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 # Rutas principales
 app.include_router(auth_router, prefix="/auth", tags=["Autenticación"])
 app.include_router(users_router, prefix="/users", tags=["Usuarios"])
@@ -28,4 +47,5 @@ app.include_router(brand_router, prefix="/brand", tags=["Registro de Marcas"])
 def root():
     return {"message": "API OK"}
 
-# NO AÑADIR NADA MÁS - Vercel detecta automáticamente la variable 'app'
+# Handler para Vercel
+handler = app
