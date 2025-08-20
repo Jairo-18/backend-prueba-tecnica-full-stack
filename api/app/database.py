@@ -14,6 +14,10 @@ if not DATABASE_URL:
 # Detectar si estamos en Vercel (serverless)
 IS_VERCEL = os.getenv("VERCEL") == "1"
 
+# Convertir URL para usar asyncpg en Vercel
+if IS_VERCEL and DATABASE_URL.startswith("postgresql://"):
+    DATABASE_URL = DATABASE_URL.replace("postgresql://", "postgresql+asyncpg://", 1)
+
 if IS_VERCEL:
     # Configuración optimizada para serverless (Vercel)
     engine = create_engine(
@@ -21,14 +25,9 @@ if IS_VERCEL:
         poolclass=NullPool,  # No pool de conexiones en serverless
         pool_pre_ping=True,  # Verificar conexión antes de usar
         echo=False,  # Sin logs en producción
-        connect_args={
-            "sslmode": "require",
-            "connect_timeout": 10,
-            "command_timeout": 10,
-        }
     )
 else:
-    # Configuración para desarrollo local
+    # Configuración para desarrollo local (mantener psycopg2)
     engine = create_engine(
         DATABASE_URL, 
         echo=True,  # Logs en desarrollo
