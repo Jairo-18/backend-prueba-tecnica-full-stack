@@ -7,5 +7,10 @@
       "config": { "maxLambdaSize": "50mb" }
     }
   ],
-  "routes": [{ "src": "/(.*)", "dest": "api/main.py" }]
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "api/main.py"
+    }
+  ]
 }
