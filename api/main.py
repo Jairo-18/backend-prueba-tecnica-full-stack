@@ -19,3 +19,5 @@ app.include_router(brand_router, prefix="/brand", tags=["Registro de Marcas"])
 @app.get("/", tags=["Root"])
 def root():
     return {"message": "API OK"}
+
+handler = app
