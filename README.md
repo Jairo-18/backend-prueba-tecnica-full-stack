@@ -22,8 +22,8 @@ Este proyecto es un **backend en FastAPI** que implementa:
 1. Clonar el repositorio:
 
 ```bash
-git clone https://github.com/tuusuario/tu-repo.git
-cd tu-repo
+https://github.com/Jairo-18/backend-prueba-tecnica-full-stack.git
+cd backend-prueba-tecnica-full-stack
 
 2. Crear y activar entorno virtual:
 python -m venv venv
