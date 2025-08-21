@@ -44,5 +44,4 @@ class RefreshToken(Base):
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     refresh_token = Column(Text, nullable=False)
     access_token = Column(Text, nullable=False)
-
     user = relationship("User", back_populates="tokens")

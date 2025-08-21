@@ -19,3 +19,11 @@ class BrandResponse(BaseModel):
 
     class Config:
         orm_mode = True
+
+class StateTypeResponse(BaseModel):
+    id: int
+    code: str
+    name: str
+
+    class Config:
+        orm_mode = True

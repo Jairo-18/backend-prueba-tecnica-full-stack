@@ -29,16 +29,33 @@ def create_user(user: UserCreate, db: Session = Depends(get_db)):
     db.refresh(new_user)
     return new_user
 
-# Obtener lista paginada de usuarios (protegido)
-@router.get("/", response_model=List[UserResponse])
+# Obtener lista paginada de usuarios con respuesta estructurada
+@router.get("/")
 def list_users(
     skip: int = 0,
     limit: int = 10,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)  # 🔑 Protegido con JWT
 ):
+    """
+    Obtener lista paginada de usuarios con información de paginación
+    """
+    # Obtener el total de registros
+    total = db.query(User).count()
+    
+    # Obtener los registros paginados
     users = db.query(User).offset(skip).limit(limit).all()
-    return users
+    
+    # Convertir a formato de respuesta
+    users_response = [UserResponse.from_orm(user) for user in users]
+    
+    return {
+        "users": users_response,
+        "total": total,
+        "skip": skip,
+        "limit": limit,
+        "pages": (total + limit - 1) // limit if limit > 0 else 1
+    }
 
 # Obtener un usuario por ID (protegido)
 @router.get("/{user_id}", response_model=UserResponse)
