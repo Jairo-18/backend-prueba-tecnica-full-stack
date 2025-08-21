@@ -1,29 +1,27 @@
 from pydantic import BaseModel
+from typing import Optional
 
 class BrandBase(BaseModel):
     brand_title: str
     state_type_id: int
+    user_id: Optional[int] = None
 
 class BrandCreate(BrandBase):
-    user_id: int 
+    pass
 
 class BrandUpdate(BaseModel):
-    brand_title: str | None = None
-    state_type_id: int | None = None
+    brand_title: Optional[str] = None
+    state_type_id: Optional[int] = None
 
-class BrandResponse(BaseModel):
+class BrandResponse(BrandBase):
     id: int
-    brand_title: str
-    user_id: int
-    state_type_id: int
-
+    
     class Config:
-        orm_mode = True
+        from_attributes = True   
 
 class StateTypeResponse(BaseModel):
     id: int
-    code: str
     name: str
-
+    
     class Config:
-        orm_mode = True
+        from_attributes = True   

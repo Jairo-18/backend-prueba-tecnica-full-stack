@@ -19,7 +19,7 @@ def create_brand(
     new_brand = RegisterBrand(
         brand_title=brand.brand_title,
         state_type_id=brand.state_type_id,
-        user_id=brand.user_id  # si quieres pasar por body
+        user_id=brand.user_id
     )
     db.add(new_brand)
     db.commit()
@@ -43,8 +43,15 @@ def list_brands(
     # Obtener los registros paginados
     brands = db.query(RegisterBrand).offset(skip).limit(limit).all()
     
-    # Convertir a formato de respuesta
-    brands_response = [BrandResponse.from_orm(brand) for brand in brands]
+    # Convertir manualmente a diccionario sin usar from_orm
+    brands_response = []
+    for brand in brands:
+        brands_response.append({
+            "id": brand.id,
+            "brand_title": brand.brand_title,
+            "state_type_id": brand.state_type_id,
+            "user_id": brand.user_id
+        })
     
     return {
         "brands": brands_response,
@@ -101,8 +108,8 @@ def delete_brand(
     db.commit()
     return {"message": f"Marca con id {brand_id} eliminada"}
 
-# Obtener tipos de estado (sin paginación ya que son pocos)
-@router.get("/state-types/", response_model=List[StateTypeResponse])
+# Obtener tipos de estado
+@router.get("/state-types/")
 def list_state_types(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
@@ -110,4 +117,13 @@ def list_state_types(
     state_types = db.query(StateType).all()
     if not state_types:
         raise HTTPException(status_code=404, detail="No hay estados disponibles")
-    return state_types
+    
+    # Convertir manualmente a diccionario
+    state_types_response = []
+    for state_type in state_types:
+        state_types_response.append({
+            "id": state_type.id,
+            "name": state_type.name  # Ajusta según tus campos reales
+        })
+    
+    return state_types_response
