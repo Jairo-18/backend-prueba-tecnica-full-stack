@@ -22,6 +22,15 @@ class BrandResponse(BrandBase):
 class StateTypeResponse(BaseModel):
     id: int
     name: str
+    code: str
     
     class Config:
         from_attributes = True   
+        
+class RoleTypeResponse(BaseModel):
+    id: int
+    name: str
+    code: str
+
+    class Config:
+        orm_mode = True

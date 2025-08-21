@@ -2,10 +2,10 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List, Optional
 
-from app.models.models import User, RegisterBrand, StateType
+from app.models.models import User, RegisterBrand, StateType, RoleType
 from app.database import get_db
 from app.core.security import get_current_user
-from app.brand.schemas import BrandCreate, BrandUpdate, BrandResponse, StateTypeResponse
+from app.brand.schemas import BrandCreate, BrandUpdate, BrandResponse, StateTypeResponse, RoleTypeResponse
 
 router = APIRouter()
 
@@ -123,7 +123,33 @@ def list_state_types(
     for state_type in state_types:
         state_types_response.append({
             "id": state_type.id,
-            "name": state_type.name  # Ajusta según tus campos reales
+            "name": state_type.name,
+            "code": state_type.code
         })
     
     return state_types_response
+
+
+# Obtener todos los RoleTypes
+@router.get("/role-types/")
+def list_role_types(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """
+    Devuelve todos los tipos de rol disponibles
+    """
+    role_types = db.query(RoleType).all()
+    if not role_types:
+        raise HTTPException(status_code=404, detail="No hay tipos de rol disponibles")
+    
+    # Convertir manualmente a diccionario
+    role_types_response = []
+    for role_type in role_types:
+        role_types_response.append({
+            "id": role_type.id,
+            "name": role_type.name,
+            "code": role_type.code 
+        })
+    
+    return role_types_response
