@@ -52,7 +52,7 @@ def login_for_access_token(login: LoginRequest, db: Session = Depends(get_db)):
         "token_type": "bearer",
         "role": role,  # <-- aquí va el rol
         "user": {
-            # "id": user.id,
+            "id": user.id,
             "email": user.email,
             "username": user.username,
             "fullName": user.fullName

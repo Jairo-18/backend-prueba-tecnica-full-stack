@@ -12,7 +12,7 @@ class RoleResponse(BaseModel):
     name: str
 
 class UserResponse(BaseModel):
-    # id: int
+    id: int
     email: str
     username: str
     fullName: Optional[str]
