@@ -12,7 +12,6 @@ from app.auth.schemas import LoginRequest, TokenResponse
 
 router = APIRouter()
 
-# Login (ya lo tienes)
 @router.post("/token", response_model=TokenResponse)
 def login_for_access_token(login: LoginRequest, db: Session = Depends(get_db)):
     user = db.query(User).filter(User.email == login.email).first()
@@ -42,11 +41,24 @@ def login_for_access_token(login: LoginRequest, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(refresh_token)
 
+    # Obtener rol relacionado
+    role = None
+    if user.role_type:
+        role = {  "code": user.role_type.code, "name": user.role_type.name}
+
     return {
         "access_token": access_token,
         "refresh_token": refresh_token_str,
-        "token_type": "bearer"
+        "token_type": "bearer",
+        "role": role,  # <-- aquí va el rol
+        "user": {
+            # "id": user.id,
+            "email": user.email,
+            "username": user.username,
+            "fullName": user.fullName
+        }
     }
+
 
 # Cerrar sesión
 @router.post("/logout")

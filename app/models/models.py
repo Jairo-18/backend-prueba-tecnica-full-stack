@@ -11,6 +11,14 @@ class StateType(Base):
     code = Column(String(50), unique=True, nullable=False)
     name = Column(String(100), nullable=False)
     brands = relationship("RegisterBrand", back_populates="state_type")
+    
+class RoleType(Base):
+    __tablename__ = "role_type"
+
+    id = Column(Integer, primary_key=True, index=True)
+    code = Column(String(50), unique=True, nullable=False)
+    name = Column(String(100), nullable=False)
+    brands = relationship("User", back_populates="role_type")
 
 
 class RegisterBrand(Base):
@@ -33,6 +41,8 @@ class User(Base):
     username = Column(String(100), unique=True, index=True, nullable=False)
     fullName = Column(String(200), nullable=True)
     password = Column(String(255), nullable=False)
+    role_type_id = Column(Integer, ForeignKey("role_type.id"), nullable=False)
+    role_type = relationship("RoleType", back_populates="brands")
     tokens = relationship("RefreshToken", back_populates="user", cascade="all, delete-orphan")
     brands = relationship("RegisterBrand", back_populates="user", cascade="all, delete-orphan")
 
