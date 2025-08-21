@@ -21,4 +21,4 @@ class UserResponse(UserBase):
     id: int
     role_type_id: int
     class Config:
-        from_attributes = True  # para usar con SQLAlchemy ORM
+        from_attributes = True  
